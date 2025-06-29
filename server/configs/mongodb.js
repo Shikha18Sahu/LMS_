@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
 
-// Cpnnet to the MongoDB database 
+// Connet to the MongoDB database 
 
 const connectDB = async () => { 
   mongoose.connection.on('connected', () => console.log('DAtabase connected successfully'));
