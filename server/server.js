@@ -4,7 +4,7 @@ import 'dotenv/config';
 import connectDB from './configs/mongodb.js';
 import { clerkWebhook } from './controllers/webhooks.js';
 
-// INitialize EXpress
+// Initialize EXpress
 const app = express();
 
 //connect to database
