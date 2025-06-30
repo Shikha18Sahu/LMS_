@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  imgaeUrl: {
+  imageUrl: {
     type: String,
     required: true,
   },
