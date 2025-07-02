@@ -78,7 +78,7 @@ const courseSchema = new mongoose.Schema({
     courseContent:[chapterSchema],
     courseRatings: [
       {
-        UserId: {
+        userId: {
             type: String, 
           },
           rating: {
