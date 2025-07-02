@@ -7,7 +7,7 @@ const purchaseSchema = new mongoose.Schema({
       ref: 'Course',
       required: true
    },
-   UserId: {
+   userId: {
       type: String,
       ref: 'User',
       required: true
