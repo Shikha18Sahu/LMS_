@@ -1,11 +1,15 @@
-import React , {useRef, useState, useEffect }from 'react'
+import React , {useRef, useState, useEffect, useContext }from 'react'
 import uniqid from 'uniqid'
 import Quill from 'quill'
 import { assets } from '../../assets/assets'
+import { AppContext } from '../../context/AppContext'
+import { toast } from 'react-toastify'
+import axios from 'axios'
 
 
 const AddCourse = () => {
 
+  const {backendUrl, getToken } = useContext(AppContext)
   const quillRef = useRef(null)
   const editorRef = useRef(null)
 
@@ -16,7 +20,7 @@ const AddCourse = () => {
   const [chapters, setChapters] = useState([])
   const [showPopup, setShowPopup] = useState(false);
   const [currentChapter, setCurrentChapter] = useState(null);
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [lectureDetails, setLectureDetails] = useState(
     {
       lectureTitle: '',
@@ -97,6 +101,48 @@ const AddCourse = () => {
 };
 
   const handleSubmit = async (e) => {
+
+    if (isSubmitting) return;  
+    setIsSubmitting(true);  
+
+    try {
+      e.preventDefault()
+      if(!image){
+        toast.error('Thumbnail Not Selected')
+      }
+      const courseData = {
+        courseTitle, 
+        courseDiscription:  quillRef.current.root.innerHTML, 
+        coursePrice: Number(coursePrice), 
+        discount: Number(discount), 
+        courseContent: chapters, 
+      }
+
+      const formData = new FormData()
+      formData.append('courseData', JSON.stringify(courseData))
+      formData.append('image', image)
+
+      const token = await getToken()
+      const {data} = await axios.post(backendUrl + '/api/educator/add-course', formData,{ headers: {Authorization: `Bearer ${token}`}} )
+
+      if(data.success){
+        toast.success(data.message)
+        setCourseTitle('')
+        setCoursePrice(0)
+        setImage(null)
+        setChapters([])
+        quillRef.current.root.innerHTML = ""
+      }else{
+        toast.error(data.message)
+      }
+
+    } catch (error) {
+        toast.error(error.message)
+      
+    }
+     finally {
+    setIsSubmitting(false);  
+  }
     e.preventDefault()
   };
 
@@ -253,9 +299,17 @@ const AddCourse = () => {
             </div>
       )}
           </div>
-          <button type='submit' className='bg-black text-white w-max py-2.5 px-8 rounded my-4'>
+          {/* <button type='submit' className='bg-black text-white w-max py-2.5 px-8 rounded my-4'>
             ADD
-          </button>
+          </button> */}
+
+                  <button 
+          type='submit' 
+          disabled={isSubmitting}  // <- disables button when form is submitting
+          className={`bg-black text-white w-max py-2.5 px-8 rounded my-4 ${isSubmitting && 'opacity-50 cursor-not-allowed'}`}
+        >
+          {isSubmitting ? "Adding..." : "ADD"}
+        </button>
       </form>
     </div>
   )

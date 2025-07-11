@@ -2,7 +2,7 @@ import {clerkClient} from '@clerk/express';
 import Course from '../models/Course.js';
 import {v2 as cloudinary} from 'cloudinary';
 import { Purchase } from '../models/Purchase.js';
-import { DashboardAccessOut } from 'svix';
+import User from '../models/User.js'
 
 // update role to educator
 export const updateRoleToEducator = async (req,res) => {
@@ -90,13 +90,18 @@ export const educatorDashboardData = async (req, res) => {
     const enrolledStudentsData =[];
     for(const course of courses){
       const students = await User.find({
-           _id:{$in:course.enrolledStudents}
+           _id:{$in: course.enrolledStudents}
       },'name imageUrl');
 
       students.forEach(student => {
         enrolledStudentsData.push({
           courseTitle: course.courseTitle,
-          studentId: student._id,
+          // studentId: student._id,
+           student: {                   
+            _id: student._id,
+            name: student.name,
+            imageUrl: student.imageUrl
+          }
       })
     })
   }
@@ -122,7 +127,7 @@ export const getEnrolledStudentsData = async (req, res) => {
     const purchases = await Purchase.find({
       courseId: { $in: courseIds },
       status: 'completed'
-    }).populated('userId', 'name imageUrl').populate('courseId', 'courseTitle')
+    }).populate('userId', 'name imageUrl').populate('courseId', 'courseTitle')
 
     const enrolledStudents = purchases.map(purchase => ({
       student: purchase.userId, 

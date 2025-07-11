@@ -14,8 +14,7 @@ export const getUserData = async(req, res)=>{
     if(!user){
       return res.json({success: false, message: 'User not found'});
     }
-
-    res.json({success: true, user})
+      res.json({ success: true, user})
     } catch (error) {
       res.json({success: false, message: error.message});
   }
@@ -124,7 +123,7 @@ export const getUserCourseProgress = async(req, res) => {
     const userId = req.auth.userId
       const { courseId } = req.body
       const progressData = await CourseProgress.findOne({userId, courseId})
-      res.json({sucess: true, progressData})
+      res.json({success: true, progressData})
 
   } catch (error) {
        res.json({success: false, message: error.message })
