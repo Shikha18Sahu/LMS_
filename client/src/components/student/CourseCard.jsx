@@ -14,7 +14,7 @@ const CourseCard = ({course}) => {
         <h3 className='text-base font-semibold'>{course.courseTitle}</h3>
         {/* <p className='text-gray-500'>{course.educator || "ShikhaSahu"}</p> */}
        <p className='text-gray-500'>
-  {course.educator && typeof course.educator === 'object'
+  {course.educator && typeof course.educator === 'object' && course.educator.name
      ? course.educator.name
      : (course.educator || "ShikhaSahu")}
 </p>
