@@ -12,7 +12,13 @@ const CourseCard = ({course}) => {
       <img className='w-full' src={course.courseThumbnail} alt="" />
       <div className='p-3 text-left'>
         <h3 className='text-base font-semibold'>{course.courseTitle}</h3>
-        <p className='text-gray-500'>{course.educator || "ShikhaSahu"}</p>
+        {/* <p className='text-gray-500'>{course.educator || "ShikhaSahu"}</p> */}
+        <p className='text-gray-500'>
+  {typeof course.educator === 'object' 
+     ? course.educator.name 
+     : (course.educator || "ShikhaSahu")}
+</p>
+
         <div className='flex items-center space-x-2'>
           <p>{calculateRating(course)}</p>
           <div className='flex'>
